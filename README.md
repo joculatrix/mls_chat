@@ -1,4 +1,6 @@
 # mls_chat
+This repository is mainly only online for portfolio purposes. If you've stumbled across it by accident, don't expect a polish application.
+
 `mls_chat` is a personal project I've been working on over the Summer in my spare time, mostly for fun. Currently, it must be noted the project is **heavily in-progress**, and **not yet functional**. The goal is not necessarily to create a production-ready application for extended public use -- security and cryptography are dangerous topics to claim mastery over without many more years of experience than I have -- but to explore the problem out of curiosity.
 
 The project is based around the [MLS (Messaging Layer Security)](https://messaginglayersecurity.rocks/) protocol, published and IETF standardized in 2023. The protocol outlines an efficient and secure process for using a sort of binary tree of cryptographic key exchanges to provide end(s)-to-end(s) encryption for group messaging, allowing groups to communicate without having to be online synchronously or even at the time of group creation. For more information on how the protocol works, I recommend either reading the protocol document or, as I did originally, reading [the earlier paper on Asynchronous Racheting Trees](https://eprint.iacr.org/2017/666.pdf) on which the protocol was based.
