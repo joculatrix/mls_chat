@@ -15,3 +15,13 @@ The project is based around the [MLS (Messaging Layer Security)](https://messagi
 - **[clap](https://github.com/clap-rs/clap):** command-line argument parsing
 - **[ratatui](https://github.com/ratatui-org/ratatui):** command-line user interface libary, with **[tui-input](https://github.com/sayanarijit/tui-input)** and **[crossterm](https://github.com/crossterm-rs/crossterm)** as a backend
 - **[chrono](https://github.com/chronotope/chrono):** for in-message timestamps
+
+## Running the project
+While the project's functionality is very limited, I realize you may still want to see. Currently, the client application won't be happy if there's no server for it to connect to. To run the server, from within the project directory (assuming you have Rust/Cargo installed):
+```
+$ cargo run -- host -p [PORT] -s [SIZE (not-yet-implemented max number of open connections)]
+```
+And then to join the server as a user:
+```
+$ cargo run -- join -t [server IP] -p [server port] -i [username/id]
+```
