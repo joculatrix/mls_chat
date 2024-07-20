@@ -4,7 +4,7 @@ use openmls_rust_crypto::OpenMlsRustCrypto;
 
 // prelude for easy use in main:
 pub use crate::controller::Controller;
-pub use crate::network::server::Server;
+pub use crate::network::server;
 pub use crate::errors::ApplicationError;
 pub use crate::user::User;
 

@@ -57,8 +57,7 @@ async fn main() {
 }
 
 async fn host(port: u16, size: usize) -> Result<()> {
-    let mut server = Server::new(port, size);
-    match server.run().await {
+    match server::listen(port, size).await {
         Ok(_) => println!("Server closed successfully."),
         Err(_) => todo!(),
     }
