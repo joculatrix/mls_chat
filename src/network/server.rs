@@ -14,6 +14,7 @@ pub async fn listen(port: u16, size: usize) -> Result<()> {
     let Ok(listener) = TcpListener::bind(address).await else {
         return Err(ApplicationError::ConnectionFailed)
     };
+    println!("Server open on port {}.", port);
 
     let (tx, _) = channel(size);
     let cancel_token = CancellationToken::new();
@@ -22,6 +23,7 @@ pub async fn listen(port: u16, size: usize) -> Result<()> {
 
     tokio::select! {
         Ok((mut stream, address)) = listener.accept() => {
+            println!("Connection {} accepted from {}.", id, address);
             let tx = tx.clone();
             let cancel_token = cancel_token.clone();
             handles.push(tokio::spawn(async move { read_stream(id, stream, tx, cancel_token) }));
@@ -67,7 +69,7 @@ async fn read_stream(
                     Ok(_) => {
                         match tx.send(Message{ content: buf }) {
                             Ok(n) => println!("Message from {} sent to {} receivers.", id, n),
-                            Err(_) => println!("Message from {} not send to any receivers.", id),
+                            Err(_) => println!("Message from {} not sent to any receivers.", id),
                         }
                     }
                     Err(_) => println!("Unable to read from stream {}.", id),
