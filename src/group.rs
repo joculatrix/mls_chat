@@ -70,20 +70,22 @@ impl Group {
     /// 
     /// # Errors
     /// 
-    /// Returns an `AddMembersError` if `MlsGroup::add_members()` fails, or if `KeyPackageIn::validate()`
-    /// returns that the key package can't be validated.
+    /// Returns an `AddMembersError` if `MlsGroup::add_members()` fails, or a `KeyPackageVerify` error 
+    /// if `KeyPackageIn::validate()` returns that the key package can't be validated.
     pub fn add_member(
         &mut self,
         signer: &impl Signer,
         key_package: KeyPackageIn
     ) -> Result<(MlsMessageOut, MlsMessageOut), ApplicationError> {
-        let Ok(key_package) = key_package.validate(&RustCrypto::default(), ProtocolVersion::default())
-            else { return Err(ApplicationError::AddMemberError) };
+        let key_package = match key_package.validate(&RustCrypto::default(), ProtocolVersion::default()) {
+            Ok(kp) => kp,
+            Err(e) => return Err(ApplicationError::KeyPackageVerify(e)),
+        };
 
-        if let Ok((commit, welcome, _)) = self.group
-            .add_members(&(*PROVIDER), signer, &[key_package]) {
-                Ok((commit, welcome))
-        } else { Err(ApplicationError::AddMemberError) }
+        match self.group.add_members(&(*PROVIDER), signer, &[key_package]) {
+            Ok((commit, welcome, _)) => Ok((commit, welcome)),
+            Err(e) => Err(ApplicationError::AddMemberError(e))
+        }
     }
 
     /// Uses a `User`'s provided signature keys to encrypt a message. Returns an `MlsMessageOut`.
