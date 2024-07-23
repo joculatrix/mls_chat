@@ -55,4 +55,32 @@ mod tests {
 
         assert!(update.is_ok(), "Key update returns error: {:?}", update);
     }
+
+    #[test]
+    fn join_from_welcome() {
+        let mut bob = User::build(String::from("bob")).unwrap();
+        let key_package = KeyPackageIn::tls_deserialize(&mut
+            (bob.generate_key_package()
+                .tls_serialize_detached()
+                .unwrap())
+                .as_slice())
+                .unwrap();
+        let mut alice = User::build(String::from("alice")).unwrap();
+        let res = alice.add_member(key_package);
+
+        assert!(res.is_ok(), "add_member returns error: {:?}", res);
+
+        let (_commit, welcome) = res.unwrap();
+        let welcome = Welcome::tls_deserialize(&mut
+            (welcome.tls_serialize_detached()
+            .unwrap())
+            .as_slice());
+        
+        assert!(welcome.is_ok(), "Welcome::tls_deserialize returns error: {:?}", welcome);
+
+        let welcome = welcome.unwrap();
+        let res = bob.join_group(welcome);
+
+        assert!(res.is_ok(), "join_group returns error: {:?}", res);
+    }
 }

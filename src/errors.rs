@@ -1,3 +1,6 @@
+use openmls::{group::AddMembersError, prelude::KeyPackageVerifyError};
+use openmls_rust_crypto::MemoryKeyStore;
+
 /// A type to encapsulate error types necessary to the program, for the convenience
 /// of being able to pass ApplicationErrors between calling functions with '?' when
 /// appropriate.
@@ -10,7 +13,7 @@
 /// to be more specific.
 #[derive(Debug)]
 pub enum ApplicationError {
-    AddMemberError,
+    AddMemberError(AddMembersError<<MemoryKeyStore as openmls::prelude::OpenMlsKeyStore>::Error>),
     ConnectionFailed,
     CryptoError,
     GroupDNE, // if an operation is attempted on a nonexistent MlsGroup
@@ -18,6 +21,7 @@ pub enum ApplicationError {
     IOError,
     JoinError,
     KeyPackageDNE, // if the User has no key package
+    KeyPackageVerify(KeyPackageVerifyError),
     KeyUpdateError,
     MlsKeyStoreError,
     ProcessMessageError(openmls::group::ProcessMessageError),
